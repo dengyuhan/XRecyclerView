@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.StickyScrollLinearLayout;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -82,7 +81,7 @@ public class LinearStickyScrollActivity extends AppCompatActivity {
         // it maybe case some new problems
         mRecyclerView.setPullRefreshEnabled(false);
 
-        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        //mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
 
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override

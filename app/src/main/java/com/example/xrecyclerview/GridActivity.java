@@ -5,13 +5,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -35,9 +31,9 @@ public class GridActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this,3);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
-        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        //mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        //mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        //mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
 
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override

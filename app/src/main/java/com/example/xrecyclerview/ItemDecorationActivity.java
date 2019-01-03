@@ -1,10 +1,10 @@
 package com.example.xrecyclerview;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -12,9 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.jcodecraeer.xrecyclerview.XRecyclerView.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -40,9 +38,9 @@ public class ItemDecorationActivity extends AppCompatActivity {
         Drawable dividerDrawable = ContextCompat.getDrawable(this, R.drawable.divider_sample);
 
         mRecyclerView.addItemDecoration(mRecyclerView.new DividerItemDecoration(dividerDrawable));
-        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
-        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        //mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        //mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        //mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
 
         View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header, (ViewGroup)findViewById(android.R.id.content),false);
         mRecyclerView.addHeaderView(header);

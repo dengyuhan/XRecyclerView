@@ -11,10 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LinearActivity extends AppCompatActivity {
     private XRecyclerView mRecyclerView;
@@ -27,7 +28,7 @@ public class LinearActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // release memory
-        if(mRecyclerView != null){
+        if (mRecyclerView != null) {
             mRecyclerView.destroy();
             mRecyclerView = null;
         }
@@ -41,23 +42,23 @@ public class LinearActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRecyclerView = (XRecyclerView)this.findViewById(R.id.recyclerview);
+        mRecyclerView = (XRecyclerView) this.findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(new FlexboxLayoutManager(this));
 
-        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
-        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        //mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        //mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        //mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
 
         mRecyclerView
                 .getDefaultRefreshHeaderView()
                 .setRefreshTimeVisible(true);
-        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header, (ViewGroup)findViewById(android.R.id.content),false);
+        View header = LayoutInflater.from(this).inflate(R.layout.recyclerview_header, (ViewGroup) findViewById(android.R.id.content), false);
         mRecyclerView.addHeaderView(header);
 
-        mRecyclerView.getDefaultFootView().setLoadingHint("自定义加载中提示");
-        mRecyclerView.getDefaultFootView().setNoMoreHint("自定义加载完毕提示");
+        //mRecyclerView.getDefaultFootView().setLoadingHint("自定义加载中提示");
+        //mRecyclerView.getDefaultFootView().setNoMoreHint("自定义加载完毕提示");
 
         // if you use setFooterView,the default footerView will unUseful
 //        TextView tv = new TextView(this);
@@ -87,16 +88,16 @@ public class LinearActivity extends AppCompatActivity {
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                refreshTime ++;
+                refreshTime++;
                 times = 0;
-                new Handler().postDelayed(new Runnable(){
+                new Handler().postDelayed(new Runnable() {
                     public void run() {
                         listData.clear();
-                        for(int i = 0; i < itemLimit ;i++){
+                        for (int i = 0; i < itemLimit; i++) {
                             listData.add("item" + i + "after " + refreshTime + " times of refresh");
                         }
                         mAdapter.notifyDataSetChanged();
-                        if(mRecyclerView != null)
+                        if (mRecyclerView != null)
                             mRecyclerView.refreshComplete();
                     }
 
@@ -105,37 +106,47 @@ public class LinearActivity extends AppCompatActivity {
 
             @Override
             public void onLoadMore() {
-                Log.e("aaaaa","call onLoadMore");
-                if(times < 2){
-                    new Handler().postDelayed(new Runnable(){
+                Log.e("aaaaa", "call onLoadMore");
+                if (new Random().nextBoolean()) {
+                    new Handler().postDelayed(new Runnable() {
                         public void run() {
-                            for(int i = 0; i < itemLimit ;i++){
-                                listData.add("item" + (1 + listData.size() ) );
-                            }
-                            if(mRecyclerView != null) {
-                                mRecyclerView.loadMoreComplete();
-                                mAdapter.notifyDataSetChanged();
+                            if (mRecyclerView != null) {
+                                mRecyclerView.setError();
                             }
                         }
                     }, 1000);
                 } else {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            for(int i = 0; i < itemLimit ;i++){
-                                listData.add("item" + (1 + listData.size() ) );
+                    if (times < 2) {
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                for (int i = 0; i < itemLimit; i++) {
+                                    listData.add("item" + (1 + listData.size()));
+                                }
+                                if (mRecyclerView != null) {
+                                    mRecyclerView.loadMoreComplete();
+                                    mAdapter.notifyDataSetChanged();
+                                }
                             }
-                            if(mRecyclerView != null) {
-                                mRecyclerView.setNoMore(true);
-                                mAdapter.notifyDataSetChanged();
+                        }, 1000);
+                    } else {
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                for (int i = 0; i < itemLimit; i++) {
+                                    listData.add("item" + (1 + listData.size()));
+                                }
+                                if (mRecyclerView != null) {
+                                    mRecyclerView.setNoMore(true);
+                                    mAdapter.notifyDataSetChanged();
+                                }
                             }
-                        }
-                    }, 1000);
+                        }, 1000);
+                    }
+                    times++;
                 }
-                times ++;
             }
         });
 
-        listData = new  ArrayList<String>();
+        listData = new ArrayList<String>();
         mAdapter = new MyAdapter(listData);
         mAdapter.setClickCallBack(
                 new MyAdapter.ItemClickCallBack() {
@@ -143,7 +154,7 @@ public class LinearActivity extends AppCompatActivity {
                     public void onItemClick(int pos) {
                         // a demo for notifyItemRemoved
                         listData.remove(pos);
-                        mRecyclerView.notifyItemRemoved(listData,pos);
+                        mRecyclerView.notifyItemRemoved(listData, pos);
                     }
                 }
         );
