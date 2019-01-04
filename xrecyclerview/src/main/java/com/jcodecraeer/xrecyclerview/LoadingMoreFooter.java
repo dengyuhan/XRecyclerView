@@ -35,19 +35,19 @@ public class LoadingMoreFooter extends RelativeLayout implements LoadMoreView {
 
     @Override
     public void setState(int state) {
-        if (LoadMoreView.NORMAL == state) {
+        if (LoadMoreView.STATE_NORMAL == state) {
             setVisibility(View.GONE);
         } else {
             setVisibility(View.VISIBLE);
-            if (LoadMoreView.LOADING == state) {
+            if (LoadMoreView.STATE_LOADING == state) {
                 mProgressBar.setVisibility(View.VISIBLE);
                 mSymbolView.setVisibility(View.GONE);
                 mLabelTextView.setText(R.string.label_loading_footer_loading);
-            } else if (LoadMoreView.THE_END == state) {
+            } else if (LoadMoreView.STATE_THE_END == state) {
                 mProgressBar.setVisibility(View.GONE);
                 mSymbolView.setVisibility(View.GONE);
                 mLabelTextView.setText(R.string.label_loading_footer_end);
-            } else if (LoadMoreView.ERROR == state) {
+            } else if (LoadMoreView.STATE_ERROR == state) {
                 mProgressBar.setVisibility(View.GONE);
                 mSymbolView.setVisibility(View.VISIBLE);
                 mLabelTextView.setText(R.string.label_loading_footer_error);

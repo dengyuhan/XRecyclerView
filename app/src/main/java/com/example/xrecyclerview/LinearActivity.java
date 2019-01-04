@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.flexbox.FlexboxLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class LinearActivity extends AppCompatActivity {
         mRecyclerView = (XRecyclerView) this.findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(new FlexboxLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         //mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
