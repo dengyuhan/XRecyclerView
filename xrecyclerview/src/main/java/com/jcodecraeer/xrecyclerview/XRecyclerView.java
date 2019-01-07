@@ -543,7 +543,7 @@ public class XRecyclerView extends RecyclerView {
                 return;
             }
 
-            int adjPosition = position - getRefreshHeaderCount() - getHeadersCount();
+            int adjPosition = getInnerPosition(position);
             adapter.onBindViewHolder(holder, adjPosition);
         }
 
@@ -554,7 +554,7 @@ public class XRecyclerView extends RecyclerView {
                 return;
             }
 
-            int adjPosition = position - getRefreshHeaderCount() - getHeadersCount();
+            int adjPosition = getInnerPosition(position);
             adapter.onBindViewHolder(holder, adjPosition, payloads);
         }
 
@@ -570,40 +570,25 @@ public class XRecyclerView extends RecyclerView {
 
         @Override
         public int getItemViewType(int position) {
-            int adjPosition = position - (getHeadersCount() + 1);
             if (isRefreshHeader(position)) {
                 return TYPE_REFRESH_HEADER;
             }
             if (isHeader(position)) {
-                position = position - 1;
-                return sHeaderTypes.get(position);
+                return sHeaderTypes.get(position - getRefreshHeaderCount());
             }
             if (isFooter(position)) {
                 return TYPE_FOOTER;
             }
-            int adapterCount;
-            if (adapter != null) {
-                adapterCount = adapter.getItemCount();
-                if (adjPosition < adapterCount) {
-                    int type = adapter.getItemViewType(adjPosition);
-                    if (isReservedItemViewType(type)) {
-                        throw new IllegalStateException("XRecyclerView require itemViewType in adapter should be less than 10000 ");
-                    }
-                    return type;
-                }
-            }
-            return 0;
+            return adapter.getItemViewType(getInnerPosition(position));
         }
 
         @Override
         public long getItemId(int position) {
-            if (adapter != null && position >= getHeadersCount() + 1) {
-                int adjPosition = position - (getHeadersCount() + 1);
-                if (adjPosition < adapter.getItemCount()) {
-                    return adapter.getItemId(adjPosition);
-                }
+            if (isInner(position)){
+                return adapter.getItemId(getInnerPosition(position));
+            }else{
+                return super.getItemId(position);
             }
-            return -1;
         }
 
         @Override
@@ -625,12 +610,12 @@ public class XRecyclerView extends RecyclerView {
 
         @Override
         public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+            super.onDetachedFromRecyclerView(recyclerView);
             adapter.onDetachedFromRecyclerView(recyclerView);
         }
 
         @Override
         public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
-            super.onViewAttachedToWindow(holder);
             ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
             if (lp != null
                     && lp instanceof StaggeredGridLayoutManager.LayoutParams
@@ -638,22 +623,38 @@ public class XRecyclerView extends RecyclerView {
                 StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
                 p.setFullSpan(true);
             }
-            adapter.onViewAttachedToWindow(holder);
+            if (isInner(holder.getLayoutPosition())) {
+                adapter.onViewAttachedToWindow(holder);
+            } else {
+                super.onViewAttachedToWindow(holder);
+            }
         }
 
         @Override
         public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-            adapter.onViewDetachedFromWindow(holder);
+            if (isInner(holder.getLayoutPosition())) {
+                adapter.onViewDetachedFromWindow(holder);
+            } else {
+                super.onViewDetachedFromWindow(holder);
+            }
         }
 
         @Override
         public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            adapter.onViewRecycled(holder);
+            if (isInner(holder.getLayoutPosition())) {
+                adapter.onViewRecycled(holder);
+            } else {
+                super.onViewRecycled(holder);
+            }
         }
 
         @Override
         public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
-            return adapter.onFailedToRecycleView(holder);
+            if (isInner(holder.getLayoutPosition())) {
+                return adapter.onFailedToRecycleView(holder);
+            } else {
+                return super.onFailedToRecycleView(holder);
+            }
         }
 
         @Override
@@ -664,6 +665,14 @@ public class XRecyclerView extends RecyclerView {
         @Override
         public void registerAdapterDataObserver(AdapterDataObserver observer) {
             adapter.registerAdapterDataObserver(observer);
+        }
+
+        private int getInnerPosition(int position) {
+            return position - getRefreshHeaderCount() - getHeadersCount();
+        }
+
+        private boolean isInner(int position) {
+            return !(isHeader(position) || isRefreshHeader(position) || isFooter(position));
         }
 
         private class SimpleViewHolder extends RecyclerView.ViewHolder {
