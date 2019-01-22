@@ -496,7 +496,8 @@ public class XRecyclerView extends RecyclerView {
             if (headerSize <= 0) {
                 return false;
             }
-            return position >= (pullRefreshEnabled ? 1 : 0) && position < headerSize + 1;
+            final int refreshHeaderCount = getRefreshHeaderCount();
+            return position >= refreshHeaderCount && position < headerSize + refreshHeaderCount;
         }
 
         public boolean isFooter(int position) {
@@ -584,9 +585,9 @@ public class XRecyclerView extends RecyclerView {
 
         @Override
         public long getItemId(int position) {
-            if (isInner(position)){
+            if (isInner(position)) {
                 return adapter.getItemId(getInnerPosition(position));
-            }else{
+            } else {
                 return super.getItemId(position);
             }
         }
