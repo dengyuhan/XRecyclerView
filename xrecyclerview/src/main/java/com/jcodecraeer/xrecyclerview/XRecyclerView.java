@@ -259,6 +259,15 @@ public class XRecyclerView extends RecyclerView {
             return null;
     }
 
+    /**
+     * 获取用户adapter的position
+     * @param wrapPosition 实际position
+     * @return
+     */
+    public int getInnerPosition(int wrapPosition) {
+        return wrapPosition - mWrapAdapter.getRefreshHeaderCount() - mWrapAdapter.getHeadersCount();
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
         super.setLayoutManager(layout);
@@ -475,8 +484,6 @@ public class XRecyclerView extends RecyclerView {
         }
     }
 
-    ;
-
     private class WrapAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         private RecyclerView.Adapter adapter;
@@ -666,10 +673,6 @@ public class XRecyclerView extends RecyclerView {
         @Override
         public void registerAdapterDataObserver(AdapterDataObserver observer) {
             adapter.registerAdapterDataObserver(observer);
-        }
-
-        private int getInnerPosition(int position) {
-            return position - getRefreshHeaderCount() - getHeadersCount();
         }
 
         private boolean isInner(int position) {
