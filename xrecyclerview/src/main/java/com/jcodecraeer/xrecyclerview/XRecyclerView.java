@@ -266,7 +266,19 @@ public class XRecyclerView extends RecyclerView {
      * @return
      */
     public int getInnerPosition(int wrapPosition) {
-        return wrapPosition - mWrapAdapter.getRefreshHeaderCount() - mWrapAdapter.getHeadersCount();
+        if (mWrapAdapter != null && mWrapAdapter.isInner(wrapPosition)) {
+            return wrapPosition - mWrapAdapter.getRefreshHeaderCount() - mWrapAdapter.getHeadersCount();
+        }
+        return wrapPosition;
+    }
+
+    /**
+     * 获取RecyclerView实际的position
+     * @param innerPosition 用户adapter的position
+     * @return
+     */
+    public int getWrapPosition(int innerPosition) {
+        return innerPosition + mWrapAdapter.getRefreshHeaderCount() + mWrapAdapter.getHeadersCount();
     }
 
     @Override

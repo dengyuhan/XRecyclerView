@@ -4,8 +4,8 @@ ext {
                     applicationId    : "com.example.xrecyclerview",
 
                     //版本号
-                    versionCode      : 7,
-                    versionName      : "1.5.15",
+                    versionCode      : 8,
+                    versionName      : "1.5.16",
 
                     //sdk版本
                     compileSdkVersion: 28,
