@@ -261,6 +261,7 @@ public class XRecyclerView extends RecyclerView {
 
     /**
      * 获取用户adapter的position
+     *
      * @param wrapPosition 实际position
      * @return
      */
@@ -274,11 +275,15 @@ public class XRecyclerView extends RecyclerView {
         if (mWrapAdapter != null) {
             if (layout instanceof GridLayoutManager) {
                 final GridLayoutManager gridManager = ((GridLayoutManager) layout);
+                final GridLayoutManager.SpanSizeLookup oldSpanSizeLookup = gridManager.getSpanSizeLookup();
                 gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        return (mWrapAdapter.isHeader(position) || mWrapAdapter.isFooter(position) || mWrapAdapter.isRefreshHeader(position))
-                                ? gridManager.getSpanCount() : 1;
+                        if (mWrapAdapter.isHeader(position) || mWrapAdapter.isFooter(position) || mWrapAdapter.isRefreshHeader(position)) {
+                            return gridManager.getSpanCount();
+                        } else {
+                            return oldSpanSizeLookup == null ? 1 : oldSpanSizeLookup.getSpanSize(position);
+                        }
                     }
                 });
             }
