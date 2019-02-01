@@ -1,7 +1,13 @@
 package com.jcodecraeer.xrecyclerview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -26,6 +32,15 @@ public class LoadingMoreFooter extends RelativeLayout implements LoadMoreView {
         mProgressBar = (ProgressBar) findViewById(R.id.pb_loadmore);
         mLabelTextView = (TextView) findViewById(R.id.tv_loadmore_label);
         mSymbolView = (TextView) findViewById(R.id.tv_loadmore_symbol);
+        final Drawable drawable = mSymbolView.getBackground();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && drawable instanceof GradientDrawable) {
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.colorAccent, typedValue, true);
+            int[] attribute = new int[]{android.support.v7.appcompat.R.attr.colorAccent};
+            TypedArray array = context.obtainStyledAttributes(typedValue.resourceId, attribute);
+            ((GradientDrawable) drawable).setStroke(getResources().getDimensionPixelSize(R.dimen.stroke_width_error_icon), array.getColor(0, Color.DKGRAY));
+            array.recycle();
+        }
         buildViewStyle(mProgressBar, mLabelTextView, mSymbolView);
     }
 
